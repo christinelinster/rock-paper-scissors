@@ -8,85 +8,88 @@ function getComputerChoice(){
 let pScore=0;
 let cScore=0;
 
-//DOM Methods
+//Selectors
 const roundResult = document.querySelector('#round-result');
 const playerScore = document.querySelector('#player-score');
 const computerScore = document.querySelector('#computer-score');
 
+roundResult.textContent = "click your choice to start game";
 
 function playRound(playerSelection, computerSelection){
-    let playerChoice = playerSelection.slice(0,1).toUpperCase() + playerSelection.slice(1).toLowerCase();
-    if(playerChoice == "Rock"){
+    if(playerSelection == "Rock"){
         if(computerSelection === "Rock"){
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return("Tie game!");
+            displayScore(pScore, cScore);
+            return("tie game!");
         }else if(computerSelection === "Paper"){
             cScore++;
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return("You lose! Paper beats Rock.");
+            displayScore(pScore, cScore);
+            return("you lose! paper beats rock.");
         }else{
             pScore++;
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return("You win! Rock beats Scissors.");
+            displayScore(pScore, cScore);
+            return("you win! rock beats scissors.");
         }
-    }else if (playerChoice == "Paper"){
+    }else if (playerSelection == "Paper"){
         if(computerSelection === "Paper"){
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return("Tie game!");
+            displayScore(pScore, cScore);
+            return("tie game!");
         }else if(computerSelection === "Rock"){
             pScore++;
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return("You win! Paper beats Rock.");
+            displayScore(pScore, cScore);
+            return("you win! paper beats rock.");
         }else{
             cScore++;
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return ("You lose! Scissors beats Paper.");
+            displayScore(pScore, cScore);
+            return ("you lose! scissors beats paper.");
         }
     }else{
         if (computerSelection == "Scissors"){
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return("Tie game!");
+            displayScore(pScore, cScore);
+            return("tie game!");
         }else if(computerSelection === "Rock"){
             cScore++;
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return("You lose! Rock beats Scissors.");
+            displayScore(pScore, cScore);
+            return("you lose! rock beats scissors.");
         }else {
             pScore++;
-            playerScore.textContent = `Player Score: ${pScore}`;
-            computerScore.textContent = `Computer Score: ${cScore}`;
-            return ("You win! Scissors beats Paper.");
+            displayScore(pScore, cScore);
+            return ("you win! scissors beats paper.");
         }
     }
 }
 
-//SOMETHING IS WRONG WITH THIS PART OF THE CODE, PLAYS MULTIPLE INSTEAD OF ONE ROUND AND WAITING FOR USER CHOICE - MIGHT BE BEACUSE OF BUBBLING
-
-const buttons = document.querySelectorAll('button');
-buttons.forEach((button) => {
-    button.addEventListener("click", () => {
+const selection = document.querySelectorAll('img');
+selection.forEach((img) => {
+    img.addEventListener("click", () => {
         if(pScore ===5 || cScore ===5){
             return;
         }
-        game(button.id);
+        img.classList.add("clicked");
+        game(img.id);
     });
+
+    img.addEventListener('transitionend', removeTransition)
 });
 
 
 function game(playerSelection){
     const results = playRound(playerSelection, getComputerChoice());
     if(pScore===5){
-        roundResult.textContent = "Game over! You won.";
+        roundResult.textContent = "congrats, you won!";
     }else if(cScore ===5){
-        roundResult.textContent = "Game over! You lost.";
+        roundResult.textContent = "game over, you lost.";
     }else{
         roundResult.textContent = results;
     }
 }
+
+function displayScore(pScore, cScore){
+    playerScore.textContent = `Player Score: ${pScore}`;
+    computerScore.textContent = `Computer Score: ${cScore}`;
+}
+
+function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('clicked');
+}
+  
